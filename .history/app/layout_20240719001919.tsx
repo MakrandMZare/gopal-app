@@ -3,6 +3,7 @@ import NavBar from "./NavBar";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+var NavBar = require("./NavBar");
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,10 +18,8 @@ export default function RootLayout({
 }>) {
   return (
     <html>
-      <body>
-        <NavBar />
-        <main>{children}</main>
-      </body>
+      <NavBar />
+      <body> {children} </body>
     </html>
   );
 }
