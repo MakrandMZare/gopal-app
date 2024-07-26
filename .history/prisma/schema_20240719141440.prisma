@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id        String   @id @default(uuid())
+  name      String
+  description String
+  price     Float
+  category  Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+  images    Image[]
+  reviews    Review[] @relation(fields: [productId], references: [id])
+  status  Status @default(OPEN)
+  user      User     @relation(fields: [userId], references: [id])
+  userId     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Status {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+model category {
+  id String @id @default(uuid())
+  name String
+  products Product[] @relation(fields: [categoryId], references: [id])
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  url      String
+  productId String 
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  content   String
+  rating     Int
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])   
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  mobile    String  @unique
+  email     String  @unique
+  password  String
+  role      Role    @default(USER) 
+  products  Product[] @relation(fields: [userId], references: [id])
+  reviews   Review[] @relation(fields: [userId], references: [id])
+  orders    Order[] @relation(fields: [userId], references: [id])
+  createdAt DateTime @default((now())
+  updatedAt DateTime @updatedAt
+}
